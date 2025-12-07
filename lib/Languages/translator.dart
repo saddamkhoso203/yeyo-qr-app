@@ -12,7 +12,7 @@ class T extends InheritedWidget {
     required Widget child,
   }) : super(child: child);
 
-  /// Normal usage in screens
+  /// Normal usage inside screens →  final t = T.get(context);
   static Map<String, String> get(BuildContext context) {
     final widget = context.dependOnInheritedWidgetOfExactType<T>();
     final code = widget?.locale.languageCode ?? 'en';
@@ -23,10 +23,9 @@ class T extends InheritedWidget {
     return en.LangEn.map;
   }
 
-  /// Optional: direct lookup by locale (rarely needed)
+  /// Optional: get translations without context
   static Map<String, String> getFromLocale(Locale locale) {
-    final code = locale.languageCode;
-    if (code == 'fr') {
+    if (locale.languageCode == 'fr') {
       return fr.LangFr.map;
     }
     return en.LangEn.map;

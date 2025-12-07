@@ -8,7 +8,7 @@ class LangEn {
 
     // Driver Details
     'driver_details': 'Driver Details',
-    'approved_banner': 'This driver has been approved by Yoyo',
+    'approved_banner': 'This driver has been approved by Yeyo',
     'driver_id': 'Driver ID',
     'date_of_birth': 'Date of Birth',
     'renewal_date': 'ID Renewal Date',

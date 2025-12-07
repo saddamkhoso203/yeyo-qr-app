@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yeyo_qr_app/Languages/translator.dart';
 
-
 import '../theme/app_colors.dart';
 import '../theme/app_text_style.dart';
 import '../main.dart';
