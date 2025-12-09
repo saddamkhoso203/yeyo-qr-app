@@ -20,10 +20,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final t = T.get(context);
 
-    // Read locale correctly
+    // Get locale
     final currentLocale = getCurrentLocale(context);
-    final currentLang =
-        currentLocale.languageCode == 'fr' ? 'French' : 'English';
+    final String langCode = currentLocale.languageCode;
+
+    // ⭐ FIX → show correct translated label
+    final currentLang = langCode == 'fr'
+        ? (t['lang_fr'] ?? 'Français')
+        : (t['lang_en'] ?? 'English');
 
     return Scaffold(
       appBar: AppBar(
@@ -37,10 +41,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 const SizedBox(height: 8),
 
-                // LANGUAGE ROW
+                // LANGUAGE
                 _cell(
                   child: ListTile(
-                    title: Text(t['language'] ?? 'Language'),
+                    title: Text(t['language'] ?? 'Langue'),
                     subtitle: Text(
                       currentLang,
                       style: const TextStyle(color: AppColors.textSecondary),
@@ -81,9 +85,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     value: history,
                     onChanged: (v) => setState(() => history = v),
                     title: Text(t['history'] ?? 'History'),
-                    subtitle: Text(
-                      t['history_desc'] ?? 'Save history of your scans',
-                    ),
+                    subtitle:
+                        Text(t['history_desc'] ?? 'Save history of your scans'),
                     activeColor: AppColors.green,
                   ),
                 ),

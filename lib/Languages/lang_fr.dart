@@ -55,11 +55,11 @@ class LangFr {
 
     // Language
     'lang_en': 'Anglais',
-'lang_fr': 'Français',
+    'lang_fr': 'Français',
 
     'select_language': 'Choisir la langue',
     'done': 'Terminé',
-    'language': 'Français',
+    'language': 'Langue',
     'send_feedback': 'Envoyer des commentaires',
     'vibrate': 'Vibration',
     'vibrate_desc': 'Vibration lors d’un scan réussi',
