@@ -54,6 +54,9 @@ class LangFr {
         'Ce projet est basé sur la bibliothèque open source zBar et est concédé sous licence selon les termes de la licence publique générale de YEYO TECH.',
 
     // Language
+    'lang_en': 'Anglais',
+'lang_fr': 'Français',
+
     'select_language': 'Choisir la langue',
     'done': 'Terminé',
     'language': 'Français',

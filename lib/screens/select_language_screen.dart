@@ -13,27 +13,27 @@ class SelectLanguageScreen extends StatefulWidget {
 }
 
 class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
-  final languages = const ['English', 'French'];
-  late String currentLang;
+  late String currentLangCode;
 
   @override
   void initState() {
     super.initState();
     final locale = getCurrentLocale(context);
-    currentLang = locale.languageCode == 'fr' ? 'French' : 'English';
-  }
-
-  Locale _mapNameToLocale(String name) {
-    return name == 'French' ? const Locale('fr') : const Locale('en');
+    currentLangCode = locale.languageCode; // "en" or "fr"
   }
 
   @override
   Widget build(BuildContext context) {
     final t = T.get(context);
 
+    /// Dynamic translated language names
+    final languages = [
+      {"code": "en", "label": t["lang_en"] ?? "English"},
+      {"code": "fr", "label": t["lang_fr"] ?? "French"},
+    ];
+
     return Scaffold(
-      // ⭐ Light grey overlay — EXACT LIKE YOUR SCREENSHOT
-      backgroundColor: const Color(0xF0F5F5F5), // slight white/grey tint
+      backgroundColor: const Color(0xF0F5F5F5),
       body: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: () => Navigator.pop(context),
@@ -93,35 +93,37 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                   const SizedBox(height: 8),
                   Divider(height: 1, color: Colors.grey.shade200),
 
-                  // items
+                  // language list
                   ListView.builder(
                     shrinkWrap: true,
                     itemCount: languages.length,
                     itemBuilder: (_, i) {
                       final lang = languages[i];
-                      final selected = lang == currentLang;
+                      final isSelected = lang["code"] == currentLangCode;
 
                       return Container(
-                        color: selected
-                            ? AppColors.green.withOpacity(0.08) // highlight same as screenshot
+                        color: isSelected
+                            ? AppColors.green.withOpacity(0.08)
                             : Colors.white,
                         child: ListTile(
                           title: Text(
-                            lang,
+                            lang["label"]!,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
-                          trailing: selected
+                          trailing: isSelected
                               ? const Icon(Icons.check, color: AppColors.green)
                               : null,
+
                           onTap: () {
-                            final newLocale = _mapNameToLocale(lang);
+                            setLocale(
+                              context,
+                              Locale(lang["code"]!),
+                            );
 
-                            setLocale(context, newLocale);
-
-                            setState(() => currentLang = lang);
+                            setState(() => currentLangCode = lang["code"]!);
 
                             Future.microtask(() {
                               if (Navigator.canPop(context)) {

@@ -53,6 +53,9 @@ class LangEn {
         'Feel free to contact us if you have any problems or questions: support@yeyocar.com',
 
     // Language
+    'lang_en': 'English',
+'lang_fr': 'French',
+
     'select_language': 'Select Language',
     'done': 'Done',
     'language': 'Language',
