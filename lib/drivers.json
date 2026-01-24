@@ -1,0 +1,140 @@
+{
+  "drivers": {
+    "YY100001": {
+      "driverId": "YY100001",
+      "fullName": "Saddam Khoso",
+      "dateOfBirth": "15/03/1980",
+      "renewalDate": "28/02/2028",
+      "role": "Chauffeur Partenaire Yeyo",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100002": {
+      "driverId": "YY100002",
+      "fullName": "Ahmed Raza",
+      "dateOfBirth": "22/06/1985",
+      "renewalDate": "10/11/2027",
+      "role": "Chauffeur Partenaire Yeyo",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100003": {
+      "driverId": "YY100003",
+      "fullName": "Bilal Shaikh",
+      "dateOfBirth": "09/01/1988",
+      "renewalDate": "16/09/2029",
+      "role": "Chauffeur Senior",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100004": {
+      "driverId": "YY100004",
+      "fullName": "Fahad Ali",
+      "dateOfBirth": "05/07/1983",
+      "renewalDate": "12/03/2028",
+      "role": "Chauffeur Partenaire Yeyo",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100005": {
+      "driverId": "YY100005",
+      "fullName": "Muhammad Usman",
+      "dateOfBirth": "11/02/1986",
+      "renewalDate": "30/08/2029",
+      "role": "Chauffeur Senior",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100006": {
+      "driverId": "YY100006",
+      "fullName": "Kashif Mehmood",
+      "dateOfBirth": "18/04/1990",
+      "renewalDate": "09/12/2027",
+      "role": "Chauffeur Partenaire Yeyo",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100007": {
+      "driverId": "YY100007",
+      "fullName": "Junaid Ahmed",
+      "dateOfBirth": "27/10/1984",
+      "renewalDate": "14/05/2028",
+      "role": "Chauffeur",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100008": {
+      "driverId": "YY100008",
+      "fullName": "Tariq Hussain",
+      "dateOfBirth": "03/12/1982",
+      "renewalDate": "22/01/2030",
+      "role": "Chauffeur Senior",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100009": {
+      "driverId": "YY100009",
+      "fullName": "Zeeshan Malik",
+      "dateOfBirth": "08/09/1987",
+      "renewalDate": "19/04/2029",
+      "role": "Chauffeur Partenaire Yeyo",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+    "YY100010": {
+      "driverId": "YY100010",
+      "fullName": "Shoaib Khan",
+      "dateOfBirth": "25/01/1991",
+      "renewalDate": "05/10/2028",
+      "role": "Chauffeur",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": true
+    },
+
+    "NY200001": {
+      "driverId": "NY200001",
+      "fullName": "Unknown Driver",
+      "dateOfBirth": "-",
+      "renewalDate": "-",
+      "role": "N/A",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": false
+    },
+    "NY200002": {
+      "driverId": "NY200002",
+      "fullName": "Test Driver 1",
+      "dateOfBirth": "-",
+      "renewalDate": "-",
+      "role": "Suspended",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": false
+    },
+    "NY200003": {
+      "driverId": "NY200003",
+      "fullName": "Test Driver 2",
+      "dateOfBirth": "-",
+      "renewalDate": "-",
+      "role": "N/A",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": false
+    },
+    "NY200004": {
+      "driverId": "NY200004",
+      "fullName": "Test Driver 3",
+      "dateOfBirth": "-",
+      "renewalDate": "-",
+      "role": "Suspended",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": false
+    },
+    "NY200005": {
+      "driverId": "NY200005",
+      "fullName": "Blacklisted Driver",
+      "dateOfBirth": "-",
+      "renewalDate": "-",
+      "role": "Blacklisted",
+      "photoUrl": "assets/profile.jpg",
+      "isApproved": false
+    }
+  }
+}

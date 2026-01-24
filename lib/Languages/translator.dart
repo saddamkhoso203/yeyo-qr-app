@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
-
-import 'lang_en.dart' as en;
-import 'lang_fr.dart' as fr;
+import 'lang_en.dart';
+import 'lang_fr.dart';
 
 class T extends InheritedWidget {
   final Locale locale;
+  late final Map<String, String> _strings;
 
-  const T({
+  T({
     super.key,
     required this.locale,
-    required Widget child,
-  }) : super(child: child);
-
-  /// Normal usage inside screens →  final t = T.get(context);
-  static Map<String, String> get(BuildContext context) {
-    final widget = context.dependOnInheritedWidgetOfExactType<T>();
-    final code = widget?.locale.languageCode ?? 'en';
-
-    if (code == 'fr') {
-      return fr.LangFr.map;
-    }
-    return en.LangEn.map;
+    required super.child,
+  }) {
+    _strings = _load(locale.languageCode);
   }
 
-  /// Optional: get translations without context
-  static Map<String, String> getFromLocale(Locale locale) {
-    if (locale.languageCode == 'fr') {
-      return fr.LangFr.map;
-    }
-    return en.LangEn.map;
+  static T get(BuildContext context) {
+    final T? result =
+        context.dependOnInheritedWidgetOfExactType<T>();
+    assert(result != null, 'Translator not found in context');
+    return result!;
   }
+
+  static Map<String, String> _load(String code) {
+    switch (code) {
+      case 'fr':
+        return LangFr.map;
+      case 'en':
+      default:
+        return LangEn.map;
+    }
+  }
+
+  String? operator [](String key) => _strings[key];
+
+  Map<String, String> get map => _strings;
 
   @override
-  bool updateShouldNotify(T oldWidget) => oldWidget.locale != locale;
+  bool updateShouldNotify(T oldWidget) {
+    return oldWidget.locale.languageCode != locale.languageCode;
+  }
 }

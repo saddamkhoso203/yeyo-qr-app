@@ -1,27 +1,27 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'driver_model.dart';
 
 class DriverRepository {
-  static final Map<String, Driver> _drivers = {
-    "YY456862": Driver(
-      id: "YY456862",
-      name: "Saddam Khoso",
-      dob: "15/03/1980",
-      expiry: "28/02/2028",
-      photo: "assets/profile.jpg",
-      approved: true,
-    ),
+  static final _collection =
+      FirebaseFirestore.instance.collection('drivers');
 
-    "NOT12345": Driver(
-      id: "NOT12345",
-      name: "Unknown Driver",
-      dob: "-",
-      expiry: "-",
-      photo: "assets/profile.jpg",
-      approved: false,
-    ),
-  };
+  /// 🔥 Firestore lookup
+  static Future<Driver?> getDriverByBadge(String badgeId) async {
+    try {
+      final snap = await _collection.doc(badgeId).get();
 
-  static Driver? getDriver(String badgeId) {
-    return _drivers[badgeId];
+      if (!snap.exists) return null;
+
+      return Driver.fromMap(snap.id, snap.data()!);
+    } catch (e) {
+      print("🔥 Firestore error: $e");
+      return null;
+    }
+  }
+
+  /// 🔥 OPTIONAL: fallback local lookup
+  /// If no local list, simply return null
+  static Driver? getDriver(String scannedId) {
+    return null; // no offline data now
   }
 }

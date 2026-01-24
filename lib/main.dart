@@ -1,5 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:yeyo_qr_app/firebase_options.dart';
 
 import 'Languages/translator.dart';
 import 'screens/SplashScreen.dart';
@@ -16,31 +21,49 @@ import 'screens/about_screen.dart';
 import 'screens/help_screen.dart';
 import 'screens/privacy_policy_screen.dart';
 
-void main() {
-  runApp(const YoyoApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  final prefs = await SharedPreferences.getInstance();
+  final savedLangCode = prefs.getString('lang_code') ?? 'en';
+
+  runApp(YoyoApp(initialLocale: Locale(savedLangCode)));
 }
 
 // Root widget → holds locale and rebuilds when changed.
 class YoyoApp extends StatefulWidget {
-  const YoyoApp({super.key});
+  final Locale initialLocale;
 
-  static _YoyoAppState? of(BuildContext context) =>
-      context.findAncestorStateOfType<_YoyoAppState>();
+  const YoyoApp({super.key, required this.initialLocale});
+
+  static _YoyoAppState of(BuildContext context) {
+    return context.findAncestorStateOfType<_YoyoAppState>()!;
+  }
 
   @override
   State<YoyoApp> createState() => _YoyoAppState();
 }
 
 class _YoyoAppState extends State<YoyoApp> {
-  Locale _locale = const Locale('en');
+  late Locale _locale;
 
-  void changeLocale(Locale locale) {
+  @override
+  void initState() {
+    super.initState();
+    _locale = widget.initialLocale;
+  }
+
+  Locale get currentLocale => _locale;
+
+  Future<void> changeLocale(Locale locale) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('lang_code', locale.languageCode);
+
     setState(() {
       _locale = locale;
     });
   }
-
-  Locale get currentLocale => _locale;
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +74,7 @@ class _YoyoAppState extends State<YoyoApp> {
         title: 'Yeyo QR',
         locale: _locale,
 
-        supportedLocales: const [
-          Locale('en'),
-          Locale('fr'),
-        ],
+        supportedLocales: const [Locale('en'), Locale('fr')],
 
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
@@ -98,14 +118,12 @@ class _YoyoAppState extends State<YoyoApp> {
   }
 }
 
-/// Change locale globally
-void setLocale(BuildContext context, Locale locale) {
-  final appState = YoyoApp.of(context);
-  appState?.changeLocale(locale);
+/// Change locale globally (SAFE)
+Future<void> setLocale(BuildContext context, Locale locale) async {
+  await YoyoApp.of(context).changeLocale(locale);
 }
 
-/// Get current selected locale
+/// Get current selected locale (SAFE)
 Locale getCurrentLocale(BuildContext context) {
-  final appState = YoyoApp.of(context);
-  return appState?.currentLocale ?? const Locale('en');
+  return YoyoApp.of(context).currentLocale;
 }

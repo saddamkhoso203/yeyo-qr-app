@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import '../data/driver_model.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_style.dart';
 import '../widgets/bottom_nav.dart';
@@ -12,6 +13,9 @@ class ApprovedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = T.get(context);
+
+    // GET DRIVER PASSED FROM SCAN
+    final Driver driver = ModalRoute.of(context)!.settings.arguments as Driver;
 
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
@@ -27,8 +31,11 @@ class ApprovedScreen extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new,
-              size: 18, color: AppColors.textPrimary),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            size: 18,
+            color: AppColors.textPrimary,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -38,7 +45,7 @@ class ApprovedScreen extends StatelessWidget {
           children: [
             _buildApprovedBanner(context),
             const SizedBox(height: 14),
-            _buildDriverMainCard(context),
+            _buildDriverMainCard(context, driver),
             const SizedBox(height: 18),
             _buildQrCard(context),
           ],
@@ -48,8 +55,7 @@ class ApprovedScreen extends StatelessWidget {
     );
   }
 
-  // 1) GREEN APPROVED BANNER ----------------------------------------------------
-
+  // APPROVED BANNER ------------------------------------------------------------
   Widget _buildApprovedBanner(BuildContext context) {
     final t = T.get(context);
 
@@ -78,9 +84,8 @@ class ApprovedScreen extends StatelessWidget {
     );
   }
 
-  // 2) FULL MAIN CARD -----------------------------------------------------------
-
-  Widget _buildDriverMainCard(BuildContext context) {
+  // DRIVER MAIN CARD (DYNAMIC) --------------------------------------------------
+  Widget _buildDriverMainCard(BuildContext context, Driver driver) {
     final t = T.get(context);
 
     return Container(
@@ -120,14 +125,14 @@ class ApprovedScreen extends StatelessWidget {
                   BoxShadow(
                     color: Colors.black.withOpacity(0.08),
                     blurRadius: 8,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: Image.asset(
-                  'assets/profile.jpg',
+                  driver.photoUrl, // 🔥 dynamic image
                   fit: BoxFit.cover,
                 ),
               ),
@@ -137,27 +142,29 @@ class ApprovedScreen extends StatelessWidget {
           const SizedBox(height: 6),
 
           // NAME + VERIFIED
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Saddam Khoso',
-                style: TextStyle(
+                driver.fullName, // 🔥 dynamic name
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: AppColors.textPrimary,
                 ),
               ),
-              SizedBox(width: 4),
-              Icon(Icons.verified, color: AppColors.green, size: 18),
+              const SizedBox(width: 4),
+              const Icon(Icons.verified, color: AppColors.green, size: 18),
             ],
           ),
 
           const SizedBox(height: 4),
 
-          // SUBTITLE
+          // ROLE
           Text(
-            t["chauffeur_partner"] ?? "Chauffeur Partenaire Yeyo",
+            driver.role.isNotEmpty
+                ? driver.role
+                : (t["chauffeur_partner"] ?? "Chauffeur Partenaire Yeyo"),
             style: const TextStyle(
               fontSize: 13,
               color: AppColors.textSecondary,
@@ -166,23 +173,31 @@ class ApprovedScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // FIELDS
+          // FIELDS (Dynamic values)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                _field(context, t["driver_id"] ?? "Driver ID", "YY456862"),
+                _field(context, t["driver_id"] ?? "Driver ID", driver.driverId),
                 const SizedBox(height: 12),
-                _field(context, t["date_of_birth"] ?? "Date of Birth", "15/03/1980"),
+                _field(
+                  context,
+                  t["date_of_birth"] ?? "Date of Birth",
+                  driver.dateOfBirth,
+                ),
                 const SizedBox(height: 12),
-                _field(context, t["renewal_date"] ?? "ID Renewal Date", "28/02/2028"),
+                _field(
+                  context,
+                  t["renewal_date"] ?? "Renewal Date",
+                  driver.renewalDate,
+                ),
               ],
             ),
           ),
 
           const SizedBox(height: 18),
 
-          // VERIFIED DRIVER BAR
+          // VERIFIED BAR
           Container(
             width: double.infinity,
             margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -193,8 +208,11 @@ class ApprovedScreen extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.verified_user,
-                    color: AppColors.green, size: 18),
+                const Icon(
+                  Icons.verified_user,
+                  color: AppColors.green,
+                  size: 18,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   t["verified_driver"] ?? "Verified Driver",
@@ -214,18 +232,14 @@ class ApprovedScreen extends StatelessWidget {
     );
   }
 
-  // FIELD WIDGET ----------------------------------------------------------------
-
+  // FIELD WIDGET ---------------------------------------------------------------
   Widget _field(BuildContext context, String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.textSecondary,
-          ),
+          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
         ),
         const SizedBox(height: 6),
         Container(
@@ -239,18 +253,14 @@ class ApprovedScreen extends StatelessWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             value,
-            style: const TextStyle(
-              fontSize: 14,
-              color: AppColors.textPrimary,
-            ),
+            style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
           ),
         ),
       ],
     );
   }
 
-  // 3) QR CARD ------------------------------------------------------------------
-
+  // QR CARD (UNCHANGED) --------------------------------------------------------
   Widget _buildQrCard(BuildContext context) {
     final t = T.get(context);
 
@@ -263,7 +273,7 @@ class ApprovedScreen extends StatelessWidget {
           BoxShadow(
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
-            offset: Offset(0, 4),
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -294,7 +304,6 @@ class ApprovedScreen extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // GREEN BUTTON
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
