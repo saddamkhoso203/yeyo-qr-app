@@ -52,6 +52,8 @@ android/**/key.properties
 
 firebase/
 firebase.json
+lib/firebase_options.dart
+
 
 # 🔐 Firebase (DO NOT COMMIT)
 android/app/google-services.json
