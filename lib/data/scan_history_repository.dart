@@ -1,25 +1,43 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:io';
+class ScanHistoryItem {
+  final String scannedId;
+  final bool isApproved;
+  final DateTime scannedAt;
+  final String device;
+  final String type;
 
+  const ScanHistoryItem({
+    required this.scannedId,
+    required this.isApproved,
+    required this.scannedAt,
+    required this.device,
+    this.type = 'qr',
+  });
+}
+
+/// API-free history repository.
+/// History APIs are intentionally NOT integrated yet. This temporary
+/// in-memory store keeps the existing UI compiling while the requested
+/// YeYo /scan and /drivers APIs are integrated first.
+///
 class ScanHistoryRepository {
-  static final _db = FirebaseFirestore.instance;
+  static final List<ScanHistoryItem> _history = [];
 
   static Future<void> saveScan({
     required String scannedId,
     required bool isApproved,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    final saveHistory = prefs.getBool('history') ?? true;
+    _history.insert(
+      0,
+      ScanHistoryItem(
+        scannedId: scannedId,
+        isApproved: isApproved,
+        scannedAt: DateTime.now(),
+        device: 'mobile',
+      ),
+    );
+  }
 
-    if (!saveHistory) return;
-
-    await _db.collection('scan_history').add({
-      'scannedId': scannedId,
-      'driverId': scannedId,
-      'isApproved': isApproved,
-      'scannedAt': FieldValue.serverTimestamp(),
-      'device': Platform.isAndroid ? 'android' : 'ios',
-    });
+  static Stream<List<ScanHistoryItem>> getScanHistory() async* {
+    yield List.unmodifiable(_history);
   }
 }

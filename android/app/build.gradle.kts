@@ -1,6 +1,5 @@
 plugins {
     id("com.android.application")
-    id("com.google.gms.google-services") // Firebase
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -16,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.saddamdev.yeyo_qr_app"
+    namespace = "checkmydriver.driver.security"
     compileSdk = 36
     ndkVersion = "27.0.12077973"
 
@@ -33,7 +32,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.saddamdev.yeyo_qr_app"
+        applicationId = "checkmydriver.driver.security"
         minSdk = flutter.minSdkVersion
         targetSdk = 36
         versionCode = flutter.versionCode

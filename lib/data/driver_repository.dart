@@ -1,27 +1,28 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import '../services/api_client.dart';
 import 'driver_model.dart';
 
 class DriverRepository {
-  static final _collection =
-      FirebaseFirestore.instance.collection('drivers');
+  DriverRepository._();
 
-  /// 🔥 Firestore lookup
-  static Future<Driver?> getDriverByBadge(String badgeId) async {
+  static final DriverRepository instance = DriverRepository._();
+  final ApiClient _api = ApiClient();
+
+  Future<Driver?> getDriverByBadge(String badge) async {
     try {
-      final snap = await _collection.doc(badgeId).get();
-
-      if (!snap.exists) return null;
-
-      return Driver.fromMap(snap.id, snap.data()!);
+      return await _api.scanQrCode(badge);
     } catch (e) {
-      print("🔥 Firestore error: $e");
+      debugPrint('Driver scan failed: $e');
       return null;
     }
   }
 
-  /// 🔥 OPTIONAL: fallback local lookup
-  /// If no local list, simply return null
-  static Driver? getDriver(String scannedId) {
-    return null; // no offline data now
+  Future<Driver?> getDriverByCode(String driverCode) async {
+    try {
+      return await _api.getDriverByCode(driverCode);
+    } catch (e) {
+      debugPrint('Driver lookup failed: $e');
+      return null;
+    }
   }
 }

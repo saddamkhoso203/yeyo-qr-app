@@ -20,51 +20,21 @@ class HelpScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-                  // HOW TO USE
-                  Text(
-                    t['how_to_use'] ?? 'How to use',
-                    style: AppTextStyle.heading,
-                  ),
+                  Text(t['how_to_use']!, style: AppTextStyle.heading),
                   const SizedBox(height: 8),
-                  Text(
-                    t['how_to_use_desc'] ??
-                        'Run the scanner, point at the code, not too close, so that there is empty space around the code. Do not scan diagonally.',
-                    style: AppTextStyle.body,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // ISSUES + QUESTIONS
-                  Text(
-                    t['issues_questions'] ?? 'Issues and questions',
-                    style: AppTextStyle.heading,
-                  ),
+                  Text(t['how_to_use_desc']!, style: AppTextStyle.body),
+                  const SizedBox(height: 20),
+                  Text(t['issues_questions']!, style: AppTextStyle.heading),
                   const SizedBox(height: 8),
-                  Text(
-                    t['contact_email'] ??
-                        'Feel free to contact us if you have any problems or questions: support@yeyocar.com',
-                    style: AppTextStyle.body,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // SCAN HINTS
-                  Text(
-                    t['scan_hints'] ?? 'Scan hints',
-                    style: AppTextStyle.heading,
-                  ),
+                  Text(t['contact_email']!, style: AppTextStyle.body),
+                  const SizedBox(height: 20),
+                  Text(t['scan_hints']!, style: AppTextStyle.heading),
                   const SizedBox(height: 8),
-                  Text(
-                    t['scan_hints_desc'] ??
-                        '',
-                    style: AppTextStyle.body,
-                  ),
+                  Text(t['scan_hints_desc']!, style: AppTextStyle.body),
                 ],
               ),
             ),
           ),
-
           const BottomNavBar(active: BottomTab.more),
         ],
       ),

@@ -21,11 +21,13 @@ class LangEn {
     'help': 'Help',
     'how_to_use': 'How to use',
     'issues_questions': 'Issues and questions',
+    'issues_questions_desc':
+        'Feel free to contact us if you have any problems or questions: support@yeyocar.com',
     'scan_hints': 'Scan hints',
     'how_to_use_desc':
-        'Run the scanner, point at the code, not too close, so that there is empty space around the code. Do not scan diagonally.',
+        'Run the scanner, point at the code, not too close, so that there is enough empty space around the code. Do not try to read the code on the diagonal',
     'scan_hints_desc':
-        'Ensure the camera is not too close, there is good light, and the camera is in focus.',
+        'To make scan successful make sure the camera is not too close to the code, there is plenty of light, the camera is on focus. ',
 
     // Privacy Policy
     'privacy_policy': 'Privacy Policy',
@@ -37,13 +39,16 @@ class LangEn {
         'The only information this application records is encoded QR data.',
     'data_disclaimer': 'Data Disclaimer',
     'data_disclaimer_text':
-        'This Privacy Statement does not apply to links you follow from this application to other sites, '
-        'services, or applications.',
+        'This Privacy Statement does not apply to links you follow from this application to other sites, services, or applications. '
+        'For example, if you use the Sharing features to send a message or to post on a social network, the information you send will be visible to others. '
+        'In order to understand how your information is handled by other sites, services and applications, please refer to their respective privacy policies. '
+        'This Privacy Statement does not apply to any decoded data stored in QR-codes or Barcodes.',
     'changes_policy': 'Changes to this Policy',
     'changes_policy_text':
-        'This policy may be revised at any time. By using our application, you accept the revised policy.',
+        'This policy may be revised at any time. By using our website or application, you signify your acceptance of the revised policy. '
+        'We encourage you to periodically review this policy so you know how we are protecting your information.',
     'license_text':
-        'This project is based on the zBar open source barcode scanning library.',
+        'This project is based on the zBar open source barcode scanning library and is licensed to you under the terms of the YEYO TECH General Public License.',
 
     // Email
     'contact_email':
@@ -72,15 +77,45 @@ class LangEn {
     'not_approved': 'This driver is not approved by Yeyo',
     'no_driver_info': 'No driver information found',
 
-    // More / About
+    // About
     'about': 'About',
-    'rate_us': 'Rate us',
+    'about_us': 'About us',
     'about_title': 'QR-code scanner',
     'about_description':
-        'This application uses the camera of your device to read bar-codes and QR-codes.',
+        'This application uses the camera of your device to read barcodes and QR-codes. '
+        'Point the camera at the code and you will see a preview of the encoded data.',
     'supported_formats': 'Supported formats',
     'supported_formats_list':
         'EAN-13/UPC-A, UPC-E, EAN-8, Code 128, Code 39, Code 93, '
         'Codabar, Interleaved 2 of 5, QR-Code and DataMatrix.',
+
+    // Rate Us
+    'rate': 'Rate',
+    'rate_us': 'Rate us',
+    'rate_': 'Rate us',
+    'rate_title': '',
+    'rate_description': 'Coming Soon',
+
+    // History
+    'no_history': 'No history found',
+    'error_loading_history': 'Error loading history',
+    'qr_code': 'QR Code',
+    'barcode': 'Barcode',
+    'today': 'Today',
+    'yesterday': 'Yesterday',
+
+    // Months
+    'month_jan': 'Jan',
+    'month_feb': 'Feb',
+    'month_mar': 'Mar',
+    'month_apr': 'Apr',
+    'month_may': 'May',
+    'month_jun': 'Jun',
+    'month_jul': 'Jul',
+    'month_aug': 'Aug',
+    'month_sep': 'Sep',
+    'month_oct': 'Oct',
+    'month_nov': 'Nov',
+    'month_dec': 'Dec',
   };
 }

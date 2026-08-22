@@ -1,15 +1,11 @@
 // ignore_for_file: depend_on_referenced_packages, library_private_types_in_public_api
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:yeyo_qr_app/firebase_options.dart';
-
+import 'package:yeyo_qr_app/screens/rate_us_screen.dart';
 import 'Languages/translator.dart';
 import 'screens/SplashScreen.dart';
 import 'theme/app_colors.dart';
-
 import 'screens/scan_qr_screen.dart';
 import 'screens/approved_screen.dart';
 import 'screens/not_approved_screen.dart';
@@ -23,9 +19,7 @@ import 'screens/privacy_policy_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  final prefs = await SharedPreferences.getInstance();
+final prefs = await SharedPreferences.getInstance();
   final savedLangCode = prefs.getString('lang_code') ?? 'en';
 
   runApp(YoyoApp(initialLocale: Locale(savedLangCode)));
@@ -71,7 +65,7 @@ class _YoyoAppState extends State<YoyoApp> {
       locale: _locale,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Yeyo QR',
+        title: 'Check My Driver',
         locale: _locale,
 
         supportedLocales: const [Locale('en'), Locale('fr')],
@@ -112,6 +106,7 @@ class _YoyoAppState extends State<YoyoApp> {
           '/about': (_) => const AboutScreen(),
           '/help': (_) => const HelpScreen(),
           '/privacy': (_) => const PrivacyPolicyScreen(),
+          '/rate': (_) => const RateUsScreen(),
         },
       ),
     );

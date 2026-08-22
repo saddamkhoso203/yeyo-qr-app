@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yeyo_qr_app/screens/select_language_screen.dart';
 import '../widgets/bottom_nav.dart';
 import '../theme/app_colors.dart';
 import '../Languages/translator.dart';
@@ -54,77 +55,101 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: Column(
         children: [
           Expanded(
-            child: ListView(
-              children: [
-                // Language
-                ListTile(
-                  title: Text(t['language'] ?? 'Language'),
-                  subtitle: Text(
-                    currentLang,
-                    style: const TextStyle(color: AppColors.textSecondary),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              switchInCurve: Curves.easeOut,
+              switchOutCurve: Curves.easeIn,
+              transitionBuilder: (child, animation) {
+                return FadeTransition(opacity: animation, child: child);
+              },
+              child: ListView(
+                key: ValueKey(
+                  langCode,
+                ), // 🌍 triggers animation on language change
+                children: [
+                  // Language
+                  ListTile(
+                    title: Text(t['language'] ?? 'Language'),
+                    subtitle: Text(
+                      currentLang,
+                      style: const TextStyle(color: AppColors.textSecondary),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (_) => const SelectLanguageScreen(),
+                      );
+                    },
                   ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => Navigator.pushNamed(context, '/select-language'),
-                ),
 
-                const Divider(),
+                  const Divider(),
 
-                // Vibrate
-                SwitchListTile(
-                  title: Text(t['vibrate'] ?? 'Vibrate'),
-                  subtitle: Text(
-                    t['vibrate_desc'] ?? 'Vibrate on successful scan',
+                  // Vibrate
+                  SwitchListTile(
+                    title: Text(t['vibrate'] ?? 'Vibrate'),
+                    subtitle: Text(
+                      t['vibrate_desc'] ?? 'Vibrate on successful scan',
+                    ),
+                    value: vibrate,
+                    activeThumbColor: Colors.white,
+                    activeTrackColor: AppColors.green.withOpacity(0.6),
+                    onChanged: (value) async {
+                      setState(() => vibrate = value);
+                      await _saveSetting('vibrate', value);
+
+                      if (value) {
+                        HapticFeedback.mediumImpact();
+                      }
+                    },
                   ),
-                  value: vibrate,
-                  onChanged: (value) async {
-                    setState(() => vibrate = value);
-                    await _saveSetting('vibrate', value);
 
-                    if (value) {
-                      HapticFeedback.mediumImpact();
-                    }
-                  },
-                ),
+                  // Beep
+                  SwitchListTile(
+                    title: Text(t['beep'] ?? 'Beep'),
+                    subtitle: Text(t['beep_desc'] ?? 'Beep on successful scan'),
+                    value: beep,
+                    activeThumbColor: Colors.white,
+                    activeTrackColor: AppColors.green.withOpacity(0.6),
+                    onChanged: (value) async {
+                      setState(() => beep = value);
+                      await _saveSetting('beep', value);
 
-                // Beep
-                SwitchListTile(
-                  title: Text(t['beep'] ?? 'Beep'),
-                  subtitle: Text(t['beep_desc'] ?? 'Beep on successful scan'),
-                  value: beep,
-                  onChanged: (value) async {
-                    setState(() => beep = value);
-                    await _saveSetting('beep', value);
-
-                    if (value) {
-                      SystemSound.play(SystemSoundType.click);
-                    }
-                  },
-                ),
-
-                // History
-                SwitchListTile(
-                  title: Text(t['history'] ?? 'History'),
-                  subtitle: Text(
-                    t['history_desc'] ?? 'Save history of your scans',
+                      if (value) {
+                        SystemSound.play(SystemSoundType.click);
+                      }
+                    },
                   ),
-                  value: history,
-                  onChanged: (value) async {
-                    setState(() => history = value);
-                    await _saveSetting('history', value);
-                  },
-                ),
 
-                const Divider(),
+                  // History
+                  SwitchListTile(
+                    title: Text(t['history'] ?? 'History'),
+                    subtitle: Text(
+                      t['history_desc'] ?? 'Save history of your scans',
+                    ),
+                    value: history,
+                    activeThumbColor: Colors.white,
+                    activeTrackColor: AppColors.green.withOpacity(0.6),
+                    onChanged: (value) async {
+                      setState(() => history = value);
+                      await _saveSetting('history', value);
+                    },
+                  ),
 
-                // Send Feedback
-                ListTile(
-                  title: Text(t['send_feedback'] ?? 'Send Feedback'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    // TODO: open email / feedback screen
-                  },
-                ),
-              ],
+                  const Divider(),
+
+                  // Send Feedback
+                  ListTile(
+                    title: Text(t['send_feedback'] ?? 'Send Feedback'),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      // TODO: open email / feedback screen
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           const BottomNavBar(active: BottomTab.settings),

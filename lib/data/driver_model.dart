@@ -1,46 +1,46 @@
 class Driver {
-  final String id;          // Firestore doc id
-  final String driverId;    // ID printed on badge / in QR
-  final String fullName;
-  final String dateOfBirth;
-  final String renewalDate;
-  final String role;        // e.g. "Chauffeur Partenaire Yeyo"
-  final String photoUrl;    // optional (for now use local asset)
-  final bool isApproved;
+  final int? id;
+  final String driverCode;
+  final String name;
+  final String? photoUrl;
+  final DateTime? dateOfBirth;
+  final DateTime? idRenewalDate;
+  final String status;
+  final bool isVerified;
+  final String? qrCodeValue;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  Driver({
-    required this.id,
-    required this.driverId,
-    required this.fullName,
-    required this.dateOfBirth,
-    required this.renewalDate,
-    required this.role,
-    required this.photoUrl,
-    required this.isApproved,
+  const Driver({
+    this.id,
+    required this.driverCode,
+    required this.name,
+    this.photoUrl,
+    this.dateOfBirth,
+    this.idRenewalDate,
+    required this.status,
+    required this.isVerified,
+    this.qrCodeValue,
+    this.createdAt,
+    this.updatedAt,
   });
 
-  factory Driver.fromMap(String id, Map<String, dynamic> data) {
-    return Driver(
-      id: id,
-      driverId: (data['driverId'] ?? '') as String,
-      fullName: (data['fullName'] ?? '') as String,
-      dateOfBirth: (data['dateOfBirth'] ?? '') as String,
-      renewalDate: (data['renewalDate'] ?? '') as String,
-      role: (data['role'] ?? '') as String,
-      photoUrl: (data['photoUrl'] ?? '') as String,
-      isApproved: (data['isApproved'] ?? false) as bool,
-    );
-  }
+  factory Driver.fromJson(Map<String, dynamic> json) {
+    DateTime? parseDate(dynamic value) =>
+        value == null ? null : DateTime.tryParse(value.toString());
 
-  Map<String, dynamic> toMap() {
-    return {
-      'driverId': driverId,
-      'fullName': fullName,
-      'dateOfBirth': dateOfBirth,
-      'renewalDate': renewalDate,
-      'role': role,
-      'photoUrl': photoUrl,
-      'isApproved': isApproved,
-    };
+    return Driver(
+      id: json['id'] is int ? json['id'] : int.tryParse('${json['id'] ?? ''}'),
+      driverCode: '${json['driver_code'] ?? ''}',
+      name: '${json['name'] ?? ''}',
+      photoUrl: json['photo_url']?.toString(),
+      dateOfBirth: parseDate(json['date_of_birth']),
+      idRenewalDate: parseDate(json['id_renewal_date']),
+      status: '${json['status'] ?? ''}',
+      isVerified: json['is_verified'] == true,
+      qrCodeValue: json['qr_code_value']?.toString(),
+      createdAt: parseDate(json['created_at']),
+      updatedAt: parseDate(json['updated_at']),
+    );
   }
 }

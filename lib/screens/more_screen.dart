@@ -11,9 +11,7 @@ class MoreScreen extends StatelessWidget {
     final t = T.get(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t["more"] ?? "More"),
-      ),
+      appBar: AppBar(title: Text(t["more"] ?? "More")),
       body: Column(
         children: [
           Expanded(
@@ -21,7 +19,7 @@ class MoreScreen extends StatelessWidget {
               children: [
                 _item(
                   context: context,
-                  title: t["about"] ?? "About",
+                  title: t["about"] ?? "About the App",
                   onTap: () => Navigator.pushNamed(context, '/about'),
                 ),
                 _item(
@@ -32,7 +30,7 @@ class MoreScreen extends StatelessWidget {
                 _item(
                   context: context,
                   title: t["rate_us"] ?? "Rate us",
-                  onTap: () {},
+                  onTap: () => Navigator.pushNamed(context, '/rate'),
                 ),
                 _item(
                   context: context,

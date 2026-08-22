@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+
 import '../data/driver_model.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_style.dart';
@@ -10,12 +11,38 @@ import '../Languages/translator.dart';
 class ApprovedScreen extends StatelessWidget {
   const ApprovedScreen({super.key});
 
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'N/A';
+
+    return '${date.day.toString().padLeft(2, '0')}/'
+        '${date.month.toString().padLeft(2, '0')}/'
+        '${date.year}';
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = T.get(context);
 
-    // GET DRIVER PASSED FROM SCAN
-    final Driver driver = ModalRoute.of(context)!.settings.arguments as Driver;
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+
+    if (arguments is! Driver) {
+      return Scaffold(
+        backgroundColor: AppColors.lightBackground,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text(t["driver_details"] ?? "Driver Details"),
+        ),
+        body: Center(
+          child: Text(
+            t["driver_not_found"] ?? "Driver information not found",
+            style: AppTextStyle.body,
+          ),
+        ),
+      );
+    }
+
+    final Driver driver = arguments;
 
     return Scaffold(
       backgroundColor: AppColors.lightBackground,
@@ -43,7 +70,7 @@ class ApprovedScreen extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 90),
         child: Column(
           children: [
-            _buildApprovedBanner(context),
+            _buildApprovedBanner(context, driver),
             const SizedBox(height: 14),
             _buildDriverMainCard(context, driver),
             const SizedBox(height: 18),
@@ -55,23 +82,35 @@ class ApprovedScreen extends StatelessWidget {
     );
   }
 
-  // APPROVED BANNER ------------------------------------------------------------
-  Widget _buildApprovedBanner(BuildContext context) {
+  // APPROVED BANNER
+  Widget _buildApprovedBanner(BuildContext context, Driver driver) {
     final t = T.get(context);
+
+    final isApproved =
+        driver.status.toLowerCase() == 'approved' && driver.isVerified;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.green.withOpacity(0.08),
+        color: isApproved
+            ? AppColors.green.withOpacity(0.08)
+            : Colors.orange.withOpacity(0.08),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: AppColors.green, size: 18),
+          Icon(
+            isApproved ? Icons.check_circle : Icons.warning_rounded,
+            color: isApproved ? AppColors.green : Colors.orange,
+            size: 18,
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              t["approved_banner"] ?? "This driver has been approved by Yeyo",
+              isApproved
+                  ? (t["approved_banner"] ??
+                        "This driver has been approved by Yeyo")
+                  : (t["driver_not_verified"] ?? "This driver is not verified"),
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
@@ -84,7 +123,7 @@ class ApprovedScreen extends StatelessWidget {
     );
   }
 
-  // DRIVER MAIN CARD (DYNAMIC) --------------------------------------------------
+  // DRIVER MAIN CARD
   Widget _buildDriverMainCard(BuildContext context, Driver driver) {
     final t = T.get(context);
 
@@ -120,7 +159,7 @@ class ApprovedScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Color(0xFFE4E5E7), width: 1),
+                border: Border.all(color: const Color(0xFFE4E5E7), width: 1),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.08),
@@ -131,10 +170,7 @@ class ApprovedScreen extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  driver.photoUrl, // 🔥 dynamic image
-                  fit: BoxFit.cover,
-                ),
+                child: _buildDriverPhoto(driver),
               ),
             ),
           ),
@@ -145,25 +181,34 @@ class ApprovedScreen extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                driver.fullName, // 🔥 dynamic name
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textPrimary,
+              Flexible(
+                child: Text(
+                  driver.name.isNotEmpty
+                      ? driver.name
+                      : (t["unknown_driver"] ?? "Unknown Driver"),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
               ),
               const SizedBox(width: 4),
-              const Icon(Icons.verified, color: AppColors.green, size: 18),
+              Icon(
+                driver.isVerified ? Icons.verified : Icons.info_outline,
+                color: driver.isVerified ? AppColors.green : Colors.orange,
+                size: 18,
+              ),
             ],
           ),
 
           const SizedBox(height: 4),
 
-          // ROLE
+          // ROLE / DRIVER STATUS
           Text(
-            driver.role.isNotEmpty
-                ? driver.role
+            driver.status.isNotEmpty
+                ? driver.status.toUpperCase()
                 : (t["chauffeur_partner"] ?? "Chauffeur Partenaire Yeyo"),
             style: const TextStyle(
               fontSize: 13,
@@ -173,23 +218,31 @@ class ApprovedScreen extends StatelessWidget {
 
           const SizedBox(height: 20),
 
-          // FIELDS (Dynamic values)
+          // DRIVER FIELDS
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                _field(context, t["driver_id"] ?? "Driver ID", driver.driverId),
+                _field(
+                  context,
+                  t["driver_id"] ?? "Driver ID",
+                  driver.driverCode,
+                ),
+
                 const SizedBox(height: 12),
+
                 _field(
                   context,
                   t["date_of_birth"] ?? "Date of Birth",
-                  driver.dateOfBirth,
+                  _formatDate(driver.dateOfBirth),
                 ),
+
                 const SizedBox(height: 12),
+
                 _field(
                   context,
                   t["renewal_date"] ?? "Renewal Date",
-                  driver.renewalDate,
+                  _formatDate(driver.idRenewalDate),
                 ),
               ],
             ),
@@ -203,19 +256,25 @@ class ApprovedScreen extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             decoration: BoxDecoration(
-              color: AppColors.green.withOpacity(0.08),
+              color: driver.isVerified
+                  ? AppColors.green.withOpacity(0.08)
+                  : Colors.orange.withOpacity(0.08),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
-                const Icon(
-                  Icons.verified_user,
-                  color: AppColors.green,
+                Icon(
+                  driver.isVerified
+                      ? Icons.verified_user
+                      : Icons.warning_amber_rounded,
+                  color: driver.isVerified ? AppColors.green : Colors.orange,
                   size: 18,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  t["verified_driver"] ?? "Verified Driver",
+                  driver.isVerified
+                      ? (t["verified_driver"] ?? "Verified Driver")
+                      : (t["driver_not_verified"] ?? "Driver Not Verified"),
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -232,7 +291,53 @@ class ApprovedScreen extends StatelessWidget {
     );
   }
 
-  // FIELD WIDGET ---------------------------------------------------------------
+  // DRIVER PHOTO
+  Widget _buildDriverPhoto(Driver driver) {
+    final photoUrl = driver.photoUrl;
+
+    if (photoUrl == null || photoUrl.trim().isEmpty) {
+      return Container(
+        color: AppColors.lightBackground,
+        child: const Center(
+          child: Icon(Icons.person, size: 48, color: AppColors.textSecondary),
+        ),
+      );
+    }
+
+    if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
+      return Image.network(
+        photoUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) {
+          return Container(
+            color: AppColors.lightBackground,
+            child: const Center(
+              child: Icon(
+                Icons.person,
+                size: 48,
+                color: AppColors.textSecondary,
+              ),
+            ),
+          );
+        },
+      );
+    }
+
+    return Image.asset(
+      photoUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) {
+        return Container(
+          color: AppColors.lightBackground,
+          child: const Center(
+            child: Icon(Icons.person, size: 48, color: AppColors.textSecondary),
+          ),
+        );
+      },
+    );
+  }
+
+  // FIELD WIDGET
   Widget _field(BuildContext context, String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -252,7 +357,7 @@ class ApprovedScreen extends StatelessWidget {
           ),
           alignment: Alignment.centerLeft,
           child: Text(
-            value,
+            value.isNotEmpty ? value : 'N/A',
             style: const TextStyle(fontSize: 14, color: AppColors.textPrimary),
           ),
         ),
@@ -260,7 +365,7 @@ class ApprovedScreen extends StatelessWidget {
     );
   }
 
-  // QR CARD (UNCHANGED) --------------------------------------------------------
+  // QR CARD
   Widget _buildQrCard(BuildContext context) {
     final t = T.get(context);
 
@@ -315,8 +420,9 @@ class ApprovedScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              onPressed: () =>
-                  Navigator.popUntil(context, ModalRoute.withName('/scan')),
+              onPressed: () {
+                Navigator.popUntil(context, ModalRoute.withName('/scan'));
+              },
               child: Text(t["scan_another"] ?? "Scan Another"),
             ),
           ),
@@ -324,8 +430,9 @@ class ApprovedScreen extends StatelessWidget {
           const SizedBox(height: 6),
 
           TextButton(
-            onPressed: () =>
-                Navigator.popUntil(context, ModalRoute.withName('/scan')),
+            onPressed: () {
+              Navigator.popUntil(context, ModalRoute.withName('/scan'));
+            },
             child: Text(
               t["close"] ?? "Close",
               style: const TextStyle(color: AppColors.textSecondary),
